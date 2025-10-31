@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 
 BluetoothService bluetoothService = BluetoothService();
 
+String mode = '';
+
 String forward = 'f';
 String rightward = 'r';
 String leftward = 'l';
@@ -236,7 +238,7 @@ class _ControllerBtnDownState extends State<ControllerBtnDown> {
   Color arrowIconColor = Colors.black;
 
   void onPanDownListener(DragDownDetails details) {
-    if (!startBtn && !upBtn && !rightBtn && !leftBtn) {
+    if (!startBtn && !upBtn && !rightBtn && !leftBtn && mode == 'M') {
       downBtn = true;
       bluetoothService.sendMessageToDevice(backward);
       setState(() {
@@ -248,7 +250,7 @@ class _ControllerBtnDownState extends State<ControllerBtnDown> {
   }
 
   void onPanEndListener(DragEndDetails details) {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       downBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -259,7 +261,7 @@ class _ControllerBtnDownState extends State<ControllerBtnDown> {
   }
 
   void onPanCancelLister() {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       downBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -306,7 +308,7 @@ class _ControllerBtnRightState extends State<ControllerBtnRight> {
   Color arrowIconColor = Colors.black;
 
   void onPanDownListener(DragDownDetails details) {
-    if (!startBtn && !upBtn && !downBtn && !rightBtn) {
+    if (!startBtn && !upBtn && !downBtn && !rightBtn && mode == 'M') {
       leftBtn = true;
       bluetoothService.sendMessageToDevice(rightward);
       setState(() {
@@ -318,7 +320,7 @@ class _ControllerBtnRightState extends State<ControllerBtnRight> {
   }
 
   void onPanEndListener(DragEndDetails details) {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       leftBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -329,7 +331,7 @@ class _ControllerBtnRightState extends State<ControllerBtnRight> {
   }
 
   void onPanCancelLister() {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       leftBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -376,7 +378,7 @@ class _ControllerBtnLeftState extends State<ControllerBtnLeft> {
   Color arrowIconColor = Colors.black;
 
   void onPanDownListener(DragDownDetails details) {
-    if (!startBtn && !upBtn && !downBtn && !leftBtn) {
+    if (!startBtn && !upBtn && !downBtn && !leftBtn && mode == 'M') {
       rightBtn = true;
       bluetoothService.sendMessageToDevice(leftward);
       setState(() {
@@ -388,7 +390,7 @@ class _ControllerBtnLeftState extends State<ControllerBtnLeft> {
   }
 
   void onPanEndListener(DragEndDetails details) {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       rightBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -399,7 +401,7 @@ class _ControllerBtnLeftState extends State<ControllerBtnLeft> {
   }
 
   void onPanCancelLister() {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       rightBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -446,7 +448,7 @@ class _ControllerBtnUpState extends State<ControllerBtnUp> {
   Color arrowIconColor = Colors.black;
 
   Future<void> onPanDownListener(DragDownDetails details) async {
-    if (!startBtn && !downBtn && !rightBtn && !leftBtn) {
+    if (!startBtn && !downBtn && !rightBtn && !leftBtn && mode == 'M') {
       upBtn = true;
       bluetoothService.sendMessageToDevice(forward);
       setState(() {
@@ -458,7 +460,7 @@ class _ControllerBtnUpState extends State<ControllerBtnUp> {
   }
 
   void onPanEndListener(DragEndDetails details) {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       upBtn = false;
       bluetoothService.sendMessageToDevice(stop);
       setState(() {
@@ -469,7 +471,7 @@ class _ControllerBtnUpState extends State<ControllerBtnUp> {
   }
 
   void onPanCancelLister() {
-    if (!startBtn) {
+    if (!startBtn && mode == 'M') {
       upBtn = false;
       setState(() {
         bluetoothService.sendMessageToDevice(stop);
@@ -517,6 +519,34 @@ class _BottomBtnState extends State<BottomBtn> {
     if (await bluetoothService.isBluetoothSupported() &&
         await bluetoothService.isBluetoothEnabled()) {
       if (await bluetoothService.connectToDevice()) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Car Mode"),
+              content: Text("Manual or Automatic operation"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    mode = 'M';
+                    bluetoothService.sendMessageToDevice(mode);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Manual"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    mode = 'A';
+                    bluetoothService.sendMessageToDevice('A');
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Automatic"),
+                ),
+              ],
+            );
+          },
+        );
         setState(() {
           startBtn = false;
           stopBtn = true;
