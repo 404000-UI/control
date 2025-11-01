@@ -57,13 +57,13 @@ void checkMessage() {
           int varL = digitalRead(A0);
           int varR = digitalRead(A5);
           if (varR == 0 && varL == 0) {
-            goForward();
+            stop();
           } else if (varR == 0 && varL == 1) {
             goRightward();
           } else if (varR == 1 && varL == 0) {
             goLeftward();
           } else if (varR == 1 && varL == 1) {
-            stop();
+            goForward();
           }
         }
     }
