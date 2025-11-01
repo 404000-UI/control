@@ -6,7 +6,7 @@
 AF_DCMotor motor_L(1);
 AF_DCMotor motor_R(4);
 SoftwareSerial hc06 = SoftwareSerial(BT_RXD, BT_TXD);
-String mode;
+char mode = 0;
 
 void goForward() {
   motor_L.run(FORWARD);
@@ -54,7 +54,7 @@ void checkMessage() {
 }
 
 void lineTracing() {
-  while (!hc06.read()) {
+  while (!hc06.available()) {
     int varL = digitalRead(A0);
     int varR = digitalRead(A5);
     if (varR == 0 && varL == 0) {
@@ -76,17 +76,18 @@ void setup() {
   motor_L.run(RELEASE);
   motor_R.setSpeed(250);
   motor_R.run(RELEASE);
-  while (mode == 'A' || mode == 'M') {
+  while (true) {
     if (Serial.available()) {
       mode = Serial.read();
+      break;
     }
   }
 }
 
 void loop() {
-  if (mode == 'A') {
+  if (mode == 'M') {
     checkMessage();
-  } else if (mode == 'M') {
+  } else if (mode == 'A') {
     lineTracing();
   }
 }

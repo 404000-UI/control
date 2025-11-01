@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 
 BluetoothService bluetoothService = BluetoothService();
 
-String mode = '';
+String mode = "";
 
-String forward = 'f';
-String rightward = 'r';
-String leftward = 'l';
-String backward = 'b';
-String stop = 'c';
+String forward = "f";
+String rightward = "r";
+String leftward = "l";
+String backward = "b";
+String stop = "c";
 
 bool startBtn = true;
 bool stopBtn = false;
@@ -530,7 +530,6 @@ class _BottomBtnState extends State<BottomBtn> {
                 TextButton(
                   onPressed: () {
                     mode = 'M';
-                    bluetoothService.sendMessageToDevice(mode);
                     Navigator.of(context).pop();
                   },
                   child: Text("Manual"),
@@ -538,7 +537,6 @@ class _BottomBtnState extends State<BottomBtn> {
                 TextButton(
                   onPressed: () {
                     mode = 'A';
-                    bluetoothService.sendMessageToDevice('A');
                     Navigator.of(context).pop();
                   },
                   child: Text("Automatic"),
