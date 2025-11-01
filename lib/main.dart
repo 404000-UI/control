@@ -537,6 +537,7 @@ class _BottomBtnState extends State<BottomBtn> {
                 TextButton(
                   onPressed: () {
                     mode = 'A';
+                    bluetoothService.sendMessageToDevice(mode);
                     Navigator.of(context).pop();
                   },
                   child: Text("Automatic"),
@@ -616,6 +617,7 @@ class _BottomBtnState extends State<BottomBtn> {
                     startBtn = true;
                     stopBtn = false;
                   });
+                  bluetoothService.sendMessageToDevice(stop);
                   bluetoothService.disconnect();
                   bluetoothService.dispose();
                   HapticFeedback.heavyImpact();

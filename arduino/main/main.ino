@@ -34,37 +34,38 @@ void stop() {
 }
 
 void checkMessage() {
-  switch (hc06.read()) {
-    case 'f':
-      goForward();
-      break;
-    case 'r':
-      goRightward();
-      break;
-    case 'l':
-      goLeftward();
-      break;
-    case 'b':
-      goBackward();
-      break;
-    case 'c':
-      stop();
-      break;
-  }
-}
-
-void lineTracing() {
-  while (!hc06.available()) {
-    int varL = digitalRead(A0);
-    int varR = digitalRead(A5);
-    if (varR == 0 && varL == 0) {
-      goForward();
-    } else if (varR == 0 && varL == 1) {
-      goRightward();
-    } else if (varR == 1 && varL == 0) {
-      goLeftward();
-    } else if (varR == 1 && varL == 1) {
-      stop();
+  if (hc06.available()) {
+    char cmd = hc06.read();
+    switch (cmd) {
+      case 'f':
+        goForward();
+        break;
+      case 'r':
+        goRightward();
+        break;
+      case 'l':
+        goLeftward();
+        break;
+      case 'b':
+        goBackward();
+        break;
+      case 'c':
+        stop();
+        break;
+      case 'A':
+        while (!hc06.available()) {
+          int varL = digitalRead(A0);
+          int varR = digitalRead(A5);
+          if (varR == 0 && varL == 0) {
+            goForward();
+          } else if (varR == 0 && varL == 1) {
+            goRightward();
+          } else if (varR == 1 && varL == 0) {
+            goLeftward();
+          } else if (varR == 1 && varL == 1) {
+            stop();
+          }
+        }
     }
   }
 }
@@ -76,18 +77,8 @@ void setup() {
   motor_L.run(RELEASE);
   motor_R.setSpeed(250);
   motor_R.run(RELEASE);
-  while (true) {
-    if (Serial.available()) {
-      mode = Serial.read();
-      break;
-    }
-  }
 }
 
 void loop() {
-  if (mode == 'M') {
-    checkMessage();
-  } else if (mode == 'A') {
-    lineTracing();
-  }
+  checkMessage();
 }
