@@ -4,7 +4,7 @@ For project
 
 # main dart file
 
-lib/main.dart
+lib/main.dart  
 lib/BluetoothManaget/bluetooth_service.dart
 
 # apk path
