@@ -6,7 +6,6 @@
 AF_DCMotor motor_L(1);
 AF_DCMotor motor_R(4);
 SoftwareSerial hc06 = SoftwareSerial(BT_RXD, BT_TXD);
-char mode = 0;
 
 void goForward() {
   motor_L.run(FORWARD);
